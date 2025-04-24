@@ -2,6 +2,8 @@ fastapi==0.110.0
 uvicorn[standard]
 scikit-learn
 joblib
+librosa
+python-multipart
 numpy
 pandas
 matplotlib

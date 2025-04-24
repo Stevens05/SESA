@@ -1,6 +1,9 @@
 from fastapi import FastAPI, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
 import joblib, shutil, os
 import tempfile
+import librosa
+import python_multipart
 from utils.audio_features import extract_features
 
 app = FastAPI()
@@ -9,7 +12,19 @@ scaler = joblib.load("model/scaler.pkl")
 le = joblib.load("model/label_encoder.pkl")
 
 
-@app.post("/predict")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # à restreindre en prod
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/")
+def read_root():
+    return {"Hello": "world"}
+
+@app.post("/predict/")
 async def predict_audio(file: UploadFile = File(...)):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
         shutil.copyfileobj(file.file, tmp)
