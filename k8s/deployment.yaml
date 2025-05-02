@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sesa-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sesa-app
+  template:
+    metadata:
+      labels:
+        app: sesa-app
+    spec:
+      containers:
+      - name: sesa-app
+        image: rgsesa.azurecr.io/sesa-app:build-tag-1
+        ports:
+        - containerPort: 8000
