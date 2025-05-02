@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File#, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import joblib, shutil, os
 import tempfile
@@ -37,3 +37,8 @@ async def predict_audio(file: UploadFile = File(...)):
     
     os.remove(tmp_path)
     return {"prediction": label}
+
+    # raise HTTPException(
+    #     status_code=404,
+    #     detail=f"file {tmp_path} is not valid"
+    # )
