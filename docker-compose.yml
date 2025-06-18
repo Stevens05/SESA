@@ -1,11 +1,41 @@
 version: '3.8'
 
 services:
+  postgres:
+    image: postgres:15
+    container_name: sesa_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: jstamo
+      POSTGRES_DB: sesa_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - sesa_net
+  
+  postgres_exporter:
+    image: prometheuscommunity/postgres-exporter
+    environment:
+      DATA_SOURCE_NAME: postgres://postgres:jstamo@postgres:5432/sesa_db?sslmode=disable
+    ports:
+      - "9187:9187"
+    depends_on:
+      - postgres
+    networks:
+      - sesa_net
+
   fastapi:
     build: .
     container_name: fastapi
     ports:
       - "8000:8000"
+    depends_on:
+      - postgres
+    networks:
+      - sesa_net
   
   prometheus:
     image: prom/prometheus
@@ -14,9 +44,32 @@ services:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+    networks:
+      - sesa_net
   
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:latest
     container_name: grafana
+    restart: always
+    depends_on:
+      - postgres
+      - prometheus
     ports:
       - "3000:3000"
+    networks:
+      - sesa_net
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+
+volumes:
+  postgres_data:
+  grafana_data:
+
+networks:
+  sesa_net:
+    driver: bridge

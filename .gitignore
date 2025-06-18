@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+*.venv
+.env
+.venv/
+venv/
+Pipfile.lock
+poetry.lock
+
+# Jupyter (if any)
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.log
+docker-compose.override.yml
+**/.docker/
+**/tmp/
+**/logs/
+
+# PostgreSQL data (never commit actual DB files)
+pgdata/
+postgres-data/
+C:/pgsql/data/
+
+# VS Code settings
+.vscode/
+
+# PyCharm
+.idea/
+
+# Build files
+build/
+dist/
+*.egg-info/
+
+# Prometheus
+prometheus-data/
+prometheus.yml~
+
+# Grafana (only ignore temp or generated files)
+!grafana/
+!grafana/**
+
+# Ignore compiled dashboards but keep JSON files
+grafana/*.json~
+
+# Other
+*.bak
+*.swp
+*.tmp

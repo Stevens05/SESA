@@ -36,7 +36,10 @@
                     body: formData
                 });
                 const result = await response.json();
-                document.getElementById('PredictionResult').textContent = `Prediction: ${result.prediction}`;
+                document.getElementById('PredictionResult').innerHTML = `
+                <strong>Message:</strong> ${result.message}<br>
+                <strong>Prediction:</strong> ${result.prediction}<br>
+                <strong>True label:</strong> ${result.true_label}`;
             } catch (error) {
                 console.error('Error:', error);
                 alert('Prediction failed. Make sure the server is running and CORS is enabled.');
